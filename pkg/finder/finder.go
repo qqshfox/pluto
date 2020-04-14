@@ -110,7 +110,7 @@ func CheckForAPIVersion(file string) ([]*api.Output, error) {
 	if err != nil {
 		return nil, err
 	}
-	outputs, err := api.IsVersioned(data)
+	outputs, err := api.IsVersioned(data, "")
 	if err != nil {
 		return nil, err
 	}

@@ -187,7 +187,7 @@ var detectCmd = &cobra.Command{
 				fmt.Println("Error reading stdin:", err)
 				os.Exit(1)
 			}
-			output, err := api.IsVersioned(fileData)
+			output, err := api.IsVersioned(fileData, "")
 			if err != nil {
 				fmt.Println("Error checking for versions:", err)
 				os.Exit(1)

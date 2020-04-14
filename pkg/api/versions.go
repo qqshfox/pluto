@@ -34,7 +34,8 @@ type Stub struct {
 
 // StubMeta will catch kube resource metadata
 type StubMeta struct {
-	Name string `json:"name" yaml:"name"`
+	Name      string  `json:"name" yaml:"name"`
+	Namespace *string `json:"namespace" yaml:"namespace"`
 }
 
 // Version is an apiVersion and a flag for deprecation
@@ -67,7 +68,7 @@ func checkVersion(stub *Stub) *Version {
 // IsVersioned returns a version if the file data sent
 // can be unmarshaled into a stub and matches a known
 // version in the VersionList
-func IsVersioned(data []byte) ([]*Output, error) {
+func IsVersioned(data []byte, namespace string) ([]*Output, error) {
 	var outputs []*Output
 	stubs, err := containsStub(data)
 	if err != nil {
@@ -79,6 +80,11 @@ func IsVersioned(data []byte) ([]*Output, error) {
 			version := checkVersion(stub)
 			if version != nil {
 				output.Name = stub.Metadata.Name
+				if stub.Metadata.Namespace != nil {
+					output.Namespace = *stub.Metadata.Namespace
+				} else {
+					output.Namespace = namespace
+				}
 				output.APIVersion = version
 			} else {
 				continue

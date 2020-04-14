@@ -75,7 +75,7 @@ func (h *Helm) getManifestsVersionTwo() error {
 		return err
 	}
 	for _, release := range list {
-		outList, err := checkForAPIVersion([]byte(release.Manifest))
+		outList, err := checkForAPIVersion([]byte(release.Manifest), release.Namespace)
 		if err != nil {
 			return fmt.Errorf("error parsing helm release '%s'\n   %w", release.Name, err)
 		}
@@ -96,7 +96,7 @@ func (h *Helm) getManifestsVersionThree() error {
 		return err
 	}
 	for _, release := range list {
-		outList, err := checkForAPIVersion([]byte(release.Manifest))
+		outList, err := checkForAPIVersion([]byte(release.Manifest), release.Namespace)
 		if err != nil {
 			return fmt.Errorf("error parsing release '%s'\n   %w", release.Name, err)
 		}
@@ -106,8 +106,8 @@ func (h *Helm) getManifestsVersionThree() error {
 }
 
 // checkForAPIVersion calls the api pkg to parse our releases for deprecated APIs
-func checkForAPIVersion(manifest []byte) ([]*api.Output, error) {
-	outputs, err := api.IsVersioned(manifest)
+func checkForAPIVersion(manifest []byte, namespace string) ([]*api.Output, error) {
+	outputs, err := api.IsVersioned(manifest, namespace)
 	if err != nil {
 		return nil, err
 	}
